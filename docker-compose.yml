@@ -1,0 +1,46 @@
+version: '1'
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./html:/var/www/html
+      - ./docker/nginx:/etc/nginx/conf.d
+    ports:
+      - "8110:80"
+    depends_on:
+      - app
+    container_name: project_nginx
+  app:
+    build: 
+      context: .
+      dockerfile: docker/app/Dockerfile
+    volumes:
+      - "./html:/var/www/html"
+    container_name: project_app 
+    depends_on:
+      - db
+  db:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD:  r00t
+      POSTGRES_USER:  root
+      POSTGRES_DB:  my_db
+    ports:
+      - 5432:5432
+    container_name: project_db
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8111:8080
+    depends_on:
+      - db
+# DB_CONNECTION=pgsql
+# DB_HOST=db
+# DB_PORT=5432
+# DB_DATABASE=my_db
+# DB_USERNAME=root
+# DB_PASSWORD=r00t
