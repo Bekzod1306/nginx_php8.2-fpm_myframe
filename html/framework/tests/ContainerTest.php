@@ -13,4 +13,24 @@ class ContainerTest extends TestCase
         $container->add('somecode',Somecode::class);
         $this->assertInstanceOf(Somecode::class,$container->get('somecode'));
     }
+
+    public function test_has_method()
+    {
+        $container = new Container();
+        $container->add('somecode',Somecode::class);
+        $this->assertTrue($container->has('somecode'));
+        $this->assertFalse(($container->has('no-class')));
+        
+    }
+
+    public function test_recursively_autowired()
+    {
+        $container = new Container();
+        $container->add('somecode',Somecode::class);
+        /** $var Somecode $somecode */
+        $somecode = $container->get('somecode');
+
+        $this->assertInstanceOf(TestCode::class,$somecode->getTestCode());
+        // $this->assertInstanceOf(Somecode::class,$container->get('somecode'));
+    }
 }

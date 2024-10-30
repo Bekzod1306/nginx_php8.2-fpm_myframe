@@ -5,6 +5,7 @@ namespace Bek\Framework\Container;
 use Bek\Framework\Container\Exceptions\ContainerException;
 use Bek\Framework\Tests\Somecode;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
 
 class Container implements ContainerInterface
 {
@@ -28,11 +29,46 @@ class Container implements ContainerInterface
     }
 
     public function get(string $id){
-        return new $this->services[$id];
+        if(!$this->has($id)){
+            if(!class_exists($id)){
+                throw new ContainerException("Service $id could not be resolved!!!");
+            }
+            $this->add($id);
+        }
+        $instance = $this->resolve($this->services[$id]);
+        return $instance;
+    }
+
+    private function resolve($class)
+    {
+        $reflactionClass = new ReflectionClass($class);
+        $constructor = $reflactionClass->getConstructor();
+        if(is_null($constructor)){
+            return $reflactionClass->newInstance();
+        }
+        $constructorParams = $constructor->getParameters();
+
+        $classDependencies = $this->resolveClassDependencies($constructorParams);
+
+        $instance = $reflactionClass->newInstanceArgs($classDependencies);
+        // dd($instance);
+        return $instance;
+    }
+
+    private function resolveClassDependencies(array $constructorParams)
+    {
+        $classDependencies = [];
+
+        foreach($constructorParams as $constructorParam){
+            $serviceType = $constructorParam->gettype();
+            $service = $this->get($serviceType->getName());
+            $classDependencies[] = $service;
+        }
+        return $classDependencies;
     }
 
     public function has(string $id):bool
     {
-
+        return  array_key_exists($id,$this->services);
     }
 }
