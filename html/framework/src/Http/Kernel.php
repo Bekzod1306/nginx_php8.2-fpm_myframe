@@ -4,6 +4,7 @@ namespace Bek\Framework\Http;
 
 use Bek\Framework\Http\Exceptions\HttpException;
 use Bek\Framework\Routing\RouterInterface;
+use Doctrine\DBAL\Connection;
 use Exception;
 use League\Container\Container;
 use Throwable;

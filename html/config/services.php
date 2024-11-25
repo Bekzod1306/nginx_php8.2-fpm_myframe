@@ -1,9 +1,12 @@
 <?php
 
 use Bek\Framework\Controller\AbstractContoller;
+use Bek\Framework\Dbal\ConnectionFactory;
 use Bek\Framework\Http\Kernel;
 use Bek\Framework\Routing\Router;
 use Bek\Framework\Routing\RouterInterface;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Tools\DsnParser;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
@@ -16,7 +19,7 @@ $dotenv = new Dotenv();
 $dotenv->load(BASE_PATH.'/.env');
 $appEnv = $_ENV['APP_ENV']??'local';
 $viewsPath = BASE_PATH.'/views';
-// dd($appEnv);
+$databaseUrl = 'pdo-pgsql://root:r00t@db:5432/my_db?charset=utf8mb4';
 $routes = include BASE_PATH . '/routes/web.php';
 
 $container = new Container();
@@ -28,5 +31,9 @@ $container->add(Kernel::class)->addArgument(RouterInterface::class)->addArgument
 $container->addShared('twig-loader',FilesystemLoader::class)->addArgument(new StringArgument($viewsPath));
 $container->addShared('twig',Environment::class)->addArgument('twig-loader');
 $container->inflector(AbstractContoller::class)->invokeMethod('setContainer',[$container]);
+$container->add(ConnectionFactory::class)->addArgument(new StringArgument($databaseUrl));
+$container->addShared(Connection::class,function() use ($container):Connection{
+    return $container->get(ConnectionFactory::class)->create();
+});
 // $container->has();
 return $container;

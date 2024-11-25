@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Services\YouTubeService;
 use Bek\Framework\Controller\AbstractContoller;
 use Bek\Framework\Http\Response;
+use Doctrine\DBAL\DriverManager;
 use Twig\Environment;
 
 class HomeController  extends AbstractContoller{
@@ -14,9 +15,8 @@ class HomeController  extends AbstractContoller{
         
     }
     public function index():Response{
+        // dd(123);
         // dd($this->container->get('twig'));
-        $content = "<h1>TEST controller</h1>";
-        $content .= '<a href="{{ youTubeChannel }}">Youtube</a>';
-        return $this->render($content,['youTubeChannel'=>$this->youtube->getChannelUrl()]);
+        return $this->render('home.html.twig',['youTubeChannel'=>$this->youtube->getChannelUrl()]);
     }
 }

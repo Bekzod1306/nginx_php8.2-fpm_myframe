@@ -4,7 +4,7 @@ namespace Bek\Framework\Http;
 
 class Response {
     public function __construct(
-        private string $content = null,
+        private string $content = '',
         private int $statusCode = 200,
         private array $headers = [],
     )
