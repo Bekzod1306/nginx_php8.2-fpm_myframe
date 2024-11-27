@@ -1,5 +1,7 @@
 <?php
 
+use Bek\Framework\Console\Application;
+use Bek\Framework\Console\Kernel as ConsoleKernel;
 use Bek\Framework\Controller\AbstractContoller;
 use Bek\Framework\Dbal\ConnectionFactory;
 use Bek\Framework\Http\Kernel;
@@ -24,6 +26,7 @@ $routes = include BASE_PATH . '/routes/web.php';
 
 $container = new Container();
 $container->delegate(new ReflectionContainer(true));
+$container->add('framework-commands-namespace',new StringArgument('Bek\\Framework\\Console\\Commands\\'));
 $container->add('APP_ENV',new StringArgument($appEnv));
 $container->add(RouterInterface::class,Router::class);
 $container->extend(RouterInterface::class)->addMethodCall('registerRoutes',[new ArrayArgument($routes)]);
@@ -35,5 +38,7 @@ $container->add(ConnectionFactory::class)->addArgument(new StringArgument($datab
 $container->addShared(Connection::class,function() use ($container):Connection{
     return $container->get(ConnectionFactory::class)->create();
 });
+$container->add(Application::class)->addArgument($container);
+$container->add(ConsoleKernel::class)->addArgument($container)->addArgument(Application::class);
 // $container->has();
 return $container;

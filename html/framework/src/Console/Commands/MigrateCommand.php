@@ -9,6 +9,7 @@ class MigrateCommand implements CommandInterface{
     public function execute(array $parameters = []):int
     {
         //handle
+        dd($parameters);
         return 0;
     }
 }

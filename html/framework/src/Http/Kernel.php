@@ -24,6 +24,12 @@ class Kernel{
     {
 
         try{
+            // $con = $this->container->get(Connection::class);
+            // $sql = "SELECT * FROM test";
+
+            // // Выполняем запрос
+            // $result = $con->fetchAllAssociative($sql);
+            // dd($result);
             [$routeHandler,$vars] = $this->router->dispatch($request,$this->container);
 
             $response = call_user_func_array($routeHandler,$vars);
