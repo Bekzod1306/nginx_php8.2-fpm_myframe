@@ -14,14 +14,7 @@ class ConnectionFactory
         $dsnParser = new DsnParser(['postgres' => 'pdo_pgsql']);
         $connectionParams = $dsnParser
             ->parse($this->databaseUrl);
-        $connectionParams = [
-            'dbname' => 'my_db',
-            'user' => 'root',
-            'password' => 'r00t',
-            'host' => 'db',
-            'driver' => 'pdo_pgsql',
-            'port' => 5432
-        ];
-        return DriverManager::getConnection($connectionParams);
+        $connection = DriverManager::getConnection($connectionParams);
+        return  $connection;
     }
 }

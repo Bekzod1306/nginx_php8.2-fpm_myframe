@@ -2,6 +2,7 @@
 
 namespace Bek\Framework\Routing;
 
+use Bek\Framework\Controller\AbstractContoller;
 use Bek\Framework\Http\Exceptions\MethodNotAllowedException;
 use Bek\Framework\Http\Exceptions\RouteNotFoundException;
 use Bek\Framework\Http\Request;
@@ -21,9 +22,11 @@ class Router implements RouterInterface
         if (is_array($handler)) {
             [$controllerId, $method] = $handler;
             $controller = $container->get($controllerId);
+            if(is_subclass_of($controller,AbstractContoller::class)){
+                $controller->setRequest($request);
+            }
             $handler = [$controller, $method];
         }
-
         return [$handler, $vars];
     }
 

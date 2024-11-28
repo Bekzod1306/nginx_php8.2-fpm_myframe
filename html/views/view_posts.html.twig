@@ -3,16 +3,13 @@
 
     {% block main%}
     <div class="bg-body-secondary p-5 rounded">
-        <form action="store" method="post">
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Заголовок</label>
-                <input name="title" type="text" class="form-control">
+                <p>{{ post.title }}</p>
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-                <textarea name="body" class="form-control" rows="3"></textarea>
+                <p>{{ post.body }}</p>
             </div>
-            <button type="submit" class="btn btn-primary">Добавить</button>
-        </form>
     </div>
     {% endblock %}

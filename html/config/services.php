@@ -1,6 +1,7 @@
 <?php
 
 use Bek\Framework\Console\Application;
+use Bek\Framework\Console\Commands\MigrateCommand;
 use Bek\Framework\Console\Kernel as ConsoleKernel;
 use Bek\Framework\Controller\AbstractContoller;
 use Bek\Framework\Dbal\ConnectionFactory;
@@ -21,7 +22,7 @@ $dotenv = new Dotenv();
 $dotenv->load(BASE_PATH.'/.env');
 $appEnv = $_ENV['APP_ENV']??'local';
 $viewsPath = BASE_PATH.'/views';
-$databaseUrl = 'pdo-pgsql://root:r00t@db:5432/my_db?charset=utf8mb4';
+$databaseUrl = 'pdo-pgsql://root:r00t@db:5432/my_db';
 $routes = include BASE_PATH . '/routes/web.php';
 
 $container = new Container();
@@ -40,5 +41,8 @@ $container->addShared(Connection::class,function() use ($container):Connection{
 });
 $container->add(Application::class)->addArgument($container);
 $container->add(ConsoleKernel::class)->addArgument($container)->addArgument(Application::class);
+$container->add('console:migrate',MigrateCommand::class)
+->addArgument(Connection::class)
+->addArgument(BASE_PATH.'/database/migrations');
 // $container->has();
 return $container;
