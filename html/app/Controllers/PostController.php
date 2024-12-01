@@ -6,6 +6,7 @@ use App\Entities\Post;
 use App\Services\PostService;
 use App\Services\YouTubeService;
 use Bek\Framework\Controller\AbstractContoller;
+use Bek\Framework\Http\RedirectResponse;
 use Bek\Framework\Http\Request;
 use Bek\Framework\Http\Response;
 use Twig\Environment;
@@ -31,8 +32,6 @@ class PostController  extends AbstractContoller
     {
         $post = Post::create($this->request->postData['title'], $this->request->postData['body']);
         $post = $this->service->save($post);
-        return $this->render('view_posts.html.twig', [
-            'post'=>$post
-        ]);
+        return new RedirectResponse("/posts/{$post->getId()}");
     }
 }

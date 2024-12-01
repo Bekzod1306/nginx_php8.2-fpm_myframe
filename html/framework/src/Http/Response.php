@@ -22,4 +22,10 @@ class Response {
         $this->content = $content;
         return $this;
     }
+    public function  getHeader(string $key) {
+        return $this->headers[$key];
+    }
+    public function getStatusCode(){
+        return $this->statusCode;
+    }
 }
